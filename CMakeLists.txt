@@ -23,3 +23,18 @@ include_directories("docopt")
 
 add_subdirectory("docopt")
 add_subdirectory("src")
+
+set(Boost_USE_STATIC_LIBS OFF)
+
+# On macOS + Homebrew, Boost only comes with libboost_thread-mt.a
+# but no libboost_thread.a. Not setting Boost_USE_MULTITHREADED seems
+# to fix the problem; see https://stackoverflow.com/a/15040393/3808537.
+# set(Boost_USE_MULTITHREADED OFF)
+
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.60.0 COMPONENTS program_options thread log system)
+if (Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+else(Boost_FOUND)
+  message(FATAL_ERROR "Qute requires Boost version 1.60 or above.")
+endif (Boost_FOUND)
